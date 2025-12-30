@@ -26,7 +26,7 @@ Pure PHP implementation of DEFLATE, GZIP, and Zlib compression/decompression wit
 
 ### Performance
 
-Pure PHP implementation is **10-50× slower** than native zlib. Use native zlib when available for production workloads.
+Pure PHP implementation is **20-90× slower** than native zlib. Use native zlib when available for production workloads.
 
 ### GZIP ISIZE Limitation
 
@@ -220,26 +220,13 @@ composer install
 
 # Run all tests
 vendor/bin/phpunit
-
-# Run with coverage (currently excluded due to filter deprecation handling)
-vendor/bin/phpunit --no-coverage
 ```
-
-**Current Test Status**: ✅ 18/18 passing
-
-Test suites:
-
-- Deflate compression tests
-- GZIP decoder/encoder round-trip tests
-- Zlib encoder/decoder tests
-- Stream filter tests (incremental I/O + concatenated gzip)
-- Polyfill stream handle tests (gzopen/gzread/gzwrite/gzseek)
 
 ## 🧩 Notes & Limitations
 
 ### Performance
 
-Pure PHP implementation is **10-50× slower** than native zlib. For production workloads, native zlib is strongly recommended. Use fflate-php as a fallback when native zlib is unavailable.
+Pure PHP implementation is **20-90× slower** than native zlib. For production workloads, native zlib is strongly recommended. Use fflate-php as a fallback when native zlib is unavailable.
 
 ### Stream Encoding
 
