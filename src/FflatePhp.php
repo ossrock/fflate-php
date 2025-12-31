@@ -124,6 +124,6 @@ class FflatePhp
      */
     public static function getVersion()
     {
-        return '0.1.0-dev';
+        return '0.2.0-dev';
     }
 }

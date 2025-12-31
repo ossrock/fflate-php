@@ -181,7 +181,7 @@ ZlibDecoder::decode(string $data): string|false
 
 ## 🏗️ Project Status
 
-**Version: 0.1.0-dev (Feature-Complete)**
+**Version: 0.2.0-dev (Feature-Complete)**
 
 ### ✅ Implemented
 
