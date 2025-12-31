@@ -183,7 +183,7 @@ ZlibDecoder::decode(string $data): string|false
 
 **Version: 0.1.0-dev (Feature-Complete)**
 
-### ✅ Implemented (95%)
+### ✅ Implemented
 
 - [x] DEFLATE inflate (decompression) - fully RFC 1951 compliant
 - [x] DEFLATE deflate (compression) - stored + fixed Huffman encoding

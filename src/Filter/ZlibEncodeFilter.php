@@ -6,15 +6,14 @@ use Ossrock\FflatePhp\Stream\ZlibStreamEncoder;
 
 class ZlibEncodeFilter extends \php_user_filter
 {
-    /** @var ZlibStreamEncoder */
     private $enc;
+    private $buffer = '';
+    private $bufferSize = 8192;
 
     public function onCreate(): bool
     {
-        $level = 6;
-        if (is_array($this->params) && isset($this->params['level'])) {
-            $level = (int) $this->params['level'];
-        }
+        $level = (int) ($this->params['level'] ?? 6);
+        $this->bufferSize = (int) ($this->params['buffer_size'] ?? 8192);
         $this->enc = new ZlibStreamEncoder($level);
         return true;
     }
@@ -24,14 +23,33 @@ class ZlibEncodeFilter extends \php_user_filter
         while ($bucket = stream_bucket_make_writeable($in)) {
             $consumed += $bucket->datalen;
 
-            $encoded = $this->enc->append($bucket->data);
-            if ($encoded !== '') {
-                $ob = stream_bucket_new($this->stream, $encoded);
-                stream_bucket_append($out, $ob);
+            // Buffering
+            $this->buffer .= $bucket->data;
+
+            if (strlen($this->buffer) >= $this->bufferSize) {
+                $encoded = $this->enc->append($this->buffer);
+                $this->buffer = '';
+
+                if ($encoded !== '') {
+                    $ob = stream_bucket_new($this->stream, $encoded);
+                    stream_bucket_append($out, $ob);
+                }
             }
         }
 
         if ($closing) {
+            // Flush remaining buffer
+            if ($this->buffer !== '') {
+                $encoded = $this->enc->append($this->buffer);
+                $this->buffer = '';
+
+                if ($encoded !== '') {
+                    $ob = stream_bucket_new($this->stream, $encoded);
+                    stream_bucket_append($out, $ob);
+                }
+            }
+
+            // Finish stream
             $tail = $this->enc->finish();
             if ($tail !== '') {
                 $ob = stream_bucket_new($this->stream, $tail);
